@@ -383,3 +383,93 @@ console.log(iterator.next());
 2. 第一次调用对象的next方法，指针自动指向数据结构的第一个成员
 3. 接下来不断调用next方法，指针一直往后移动，直到指向最后一个成员
 4. 每调用next方法返回一个包含value和done属性的对象
+
+
+
+# 13.生成器函数的声明及调用
+
+```javascript
+//生成器其实就是一个特殊的函数
+function * gen(){
+	console.log("hello generator")
+}
+
+let iterator = gen();
+//生成器函数要调用next()方法才会执行
+iterator.next();
+
+//函数代码的分隔符
+function * gen(){
+    yield '一只没有耳朵';
+    yield '一只没有尾部';
+    yield '真奇怪';
+}
+
+let iterator = gen();
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+console.log(iterator.next());
+```
+
+![image-20210926211545565](../../Typora/img/image-20210926211545565.png)
+
+==由图可见，生成器函数 + yield分隔符可以使代码一行一行输出==
+
+
+
+## 生成器函数的参数传递
+
+
+
+![image-20210926212324277](../../Typora/img/image-20210926212324277.png)
+
+
+
+## 生成器函数解决回调地狱问题
+
+![image-20210926212951432](../../Typora/img/image-20210926212951432.png)
+
+
+
+## 生成器函数实现异步操作
+
+```javascript
+
+function getUsers(){
+    setTimeout(()=>{
+        let data = '用户信息';
+        iterator.next(data);
+    },1000)
+}
+
+function getOrders(){
+    setTimeout(()=>{
+        let data = '订单数据';
+        iterator.next(data);
+    },1000)
+}
+
+function getGoods(){
+    setTimeout(()=>{
+        let data = '商品数据';
+        iterator.next(data);
+    },1000)
+}
+
+function * gen(){
+    let users = yield getUsers();
+    console.log(users);
+    let orders = yield getOrders();
+    console.log(orders);
+    let goods = yield getGoods();
+    console.log(goods);
+}
+
+let iterator = gen();
+iterator.next();
+//输出：用户信息
+//	   订单数据
+//     商品数据
+```
+
