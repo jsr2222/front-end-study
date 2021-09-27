@@ -473,3 +473,204 @@ iterator.next();
 //     商品数据
 ```
 
+# 14、Promise介绍
+
+```javascript
+//实例化Promise对象
+const p = new Promise(function(resolve,reject){
+    setTimeout(function(){
+        //成功时
+        // let data = '数据库中的用户数据';
+        // resolve(data);
+
+        //失败时
+        let err = '数据读取失败';
+        reject(err);
+    },1000);
+})
+
+//调用promise对象的then方法
+p.then(function(value){
+    console.log(value);
+},function(reason){
+    console.error(reason)
+})
+```
+
+## Promise封装读取文件
+
+```javascript
+//1.引入fs模块
+const fs = require('fs');
+
+//2.调用方法读取文件
+fs.readFile('./resources/为学.md', (err, data)=>{
+    //如果失败，则抛出错误
+    if(err) throw err;
+    //如果成功，则输出内容
+    console.log(data.toString())
+})
+```
+
+```javascript
+//1.引入fs模块
+const fs = require('fs');
+
+//2.调用方法读取文件
+
+//3.使用Prominse封装
+const p = new Promise(function(resolve, reject){
+    fs.readFile('./resources/为学.md', (err, data)=>{
+        //如果失败，则抛出错误
+        if(err) reject(err);
+        //如果成功，则输出内容
+        resolve(data)
+    });
+    
+});
+
+p.then(function(value){
+    console.log(value.toString());
+},function(reason){
+    console.log("读取失败！！")
+})
+```
+
+## Promise封装AJAX
+
+```javascript
+//1.创建对象 
+const xhr = new XMLHttpRequest();
+
+//2.初始化
+xhr.open("GET","https://api.apiopen.top/getJoke");
+
+//3.发送
+xhr.send();
+
+//4.绑定事件，处理响应结果
+xhr.onreadystatechange = function(){
+    //判断
+    if(xhr.readyState === 4){
+        //判断响应状态码 200-299
+        if(xhr.status >= 200 && xhr.status < 300){
+            //表示成功
+            console.log(xhr.response);
+        }else{
+            //如果失败
+            console.error(xhr.status);
+        }
+    }
+}
+```
+
+```javascript
+//Promise封装AJAX
+const p = new Promise((resolve, reject) => {
+    //1.创建对象
+    let XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+ 
+    let xhr = new XMLHttpRequest();
+
+    //2.初始化
+    xhr.open("GET", "http://api.apiopen.top/getJoke");
+
+    //3.发送
+    xhr.send();
+
+    //4.绑定事件，处理响应结果
+    xhr.onreadystatechange = function () {
+        //判断
+        if (xhr.readyState === 4) {
+            //判断响应状态码 200-299
+            if(xhr.status >= 200 && xhr.status < 300){
+                //表示成功
+                resolve(xhr.response);
+            }else{
+                //如果失败
+                reject(xhr.status);
+            }
+        }
+    }
+})
+
+p.then(function(value){
+    console.log(value);
+},function(reason){
+    console.error(reason);
+}
+)
+```
+
+## Promise对象的catch方法
+
+```javascript
+const p = new Promise((resolve, reject)=>{
+	setTimeout(()=>{
+        //设置p对象的状态为失败，并设置失败的值
+        reject("出错了");
+    }, 1000)
+});
+
+p.catch(function(reason){
+	console.warn(reason);
+})
+```
+
+
+
+# set集合介绍和API
+
+```javascript
+//声明一个set
+let s = new Set();
+let s2 = new Set(['大事儿'，'小事儿','好事儿','坏事儿','小事儿']);//重复的只会算一个
+
+//元素个数
+console.log(s2.size);
+//添加新的元素
+s2.add('喜事儿');
+//删除元素
+s2.delete('坏事儿');
+//判断集合中是否有这个值
+console.log(s2.has('糟心事'));
+//清空
+s2.clear();
+
+//遍历
+for(let v of s2){
+    console.log(v);//输出：大事儿
+                   //     小事儿
+    			   //     好事儿
+        		   //     坏事儿
+```
+
+
+
+# Map的介绍和API
+
+![image-20210927202553246](../../Typora/img/image-20210927202553246.png)
+
+
+
+# class介绍
+
+![image-20210927203356992](../../Typora/img/image-20210927203356992.png)
+
+```javascript
+class Phone{
+    //构造方法，名字不能修改
+    constructor(brand, price){
+        this.brand = brand;
+        this.price = price;
+    }
+    
+    //方法必须使用该语法， 不能使用ES5的对象完整形式
+    call(){
+        console.log("我可以打电话");
+    }
+}
+
+let onePlus = new Shouji("1+", 1999);
+```
+
