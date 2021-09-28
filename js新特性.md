@@ -619,7 +619,7 @@ p.catch(function(reason){
 
 
 
-# set集合介绍和API
+# 15、set集合介绍和API
 
 ```javascript
 //声明一个set
@@ -647,13 +647,13 @@ for(let v of s2){
 
 
 
-# Map的介绍和API
+# 16、Map的介绍和API
 
 ![image-20210927202553246](../../Typora/img/image-20210927202553246.png)
 
 
 
-# class介绍
+# 17、class介绍
 
 ![image-20210927203356992](../../Typora/img/image-20210927203356992.png)
 
@@ -673,4 +673,399 @@ class Phone{
 
 let onePlus = new Shouji("1+", 1999);
 ```
+
+
+
+## 17.1、ES5构造函数继承
+
+```javascript
+//手机
+function Phone(brand, price){
+	this.brand = brand;
+    this.price = price;
+}
+
+Phone.prototype.call = function(){
+    console.log("我可以搭电话");
+}
+
+//智能手机
+function SmartPhone(brand, price, color, size) {
+    Phone.call(this, brand, price);
+    this.color = color;
+    this.size = size;
+}
+
+//设置子级构造函数的原型
+SmartPhone.prototyoe = new Phone;
+SmartPhone.prototype.constructor = SmartPhone;
+
+//声明 子类的方法
+SmartPhone.prototype.playGame = function(){
+    console.log("我可以玩游戏");
+}
+
+SmartPhone.prototype.photo = function(){
+    console.log("我可以拍照");
+}
+
+const chuizi = new SmartPhone('锤子'， 2499, '黑色', '5.5inch');
+```
+
+
+
+## 17.2 ES6 class的类继承
+
+```javascript
+class Phone{
+    //构造方法
+    construtor(brand, price){
+        this.brand = brand;
+        this.price = price;
+    }
+    
+    //父类的成员属性
+    call(){
+        console.log("我可以打电话！");
+    }
+}
+
+class SmartPhone extends Phone {
+    //构造方法
+    constructor(brand, price, color, size){
+        super(brand, price);
+        this.color = color;
+        this.size = size;
+    }
+    
+    photo(){
+        console.log("拍照");
+    }
+    
+    playGame(){
+        console.log("玩游戏");
+    }
+}
+
+const xiaomi = new 	SmartPhone('小米', 799， '黑色', '4.7inch');
+
+```
+
+
+
+## 17.3 子类对父类方法的重写
+
+```javascript
+class Phone{
+    //构造方法
+    construtor(brand, price){
+        this.brand = brand;
+        this.price = price;
+    }
+    
+
+    //父类的成员属性
+    call(){
+        console.log("我可以打电话！");
+    }
+
+}
+
+class SmartPhone extends Phone {
+    //构造方法
+    constructor(brand, price, color, size){
+        super(brand, price);
+        this.color = color;
+        this.size = size;
+    }
+    
+
+    photo(){
+        console.log("拍照");
+    }
+    
+    playGame(){
+        console.log("玩游戏");
+    }
+    
+    //子类对父类call方法的重写
+    
+
+}
+
+const xiaomi = new 	SmartPhone('小米', 799， '黑色', '4.7inch');
+```
+
+
+
+## 17.4 class中的geter和seter设置
+
+
+
+# 18、ES6的数值方法拓展
+
+![image-20210928140950172](../../Typora/img/image-20210928140950172.png)
+
+![image-20210928141223925](../../Typora/img/image-20210928141223925.png)
+
+
+
+# 19、ES6的对象方法拓展
+
+
+
+![image-20210928142141690](../../Typora/img/image-20210928142141690.png)
+
+![image-20210928142544507](../../Typora/img/image-20210928142544507.png)
+
+
+
+# 20、async和await
+
+**async 和 await 两种语法结合可以让异步代码像同步代码一样**
+
+
+
+## 20.1 async
+
+![image-20210928152317849](../../Typora/img/image-20210928152317849.png)
+
+```javascript
+//async 函数
+async function fn(){
+    //1.只要返回的结果不是一个 Promise类型的对象，返回的结果就是成功 Promise       对象
+    return 'hhh';
+    return ;
+    
+    //2.抛出错误， 返回的结果是一个失败的 Promise
+    throw new Error('出错了');
+    
+    //3.返回的结果如果是一个成功的 promise 对象，则fn函数返回的也是成功的       promise对象，且值就是该promise的值‘成功的数据’
+    return new Promise((resolve, reject)=>{
+		resolve('成功的数据')
+    })
+    
+    //4.返回的结果如果是一个失败的 promise 对象，则fn函数返回的也是失		  败的promise对象，且值就是该promise的值‘失败的数据’
+    return new Promise((resolve, reject)=>{
+		reject('失败的数据')
+    })
+}
+
+const result = fn();
+console.log(result);
+```
+
+
+
+## 20.2 await函数
+
+![image-20210928152353067](../../Typora/img/image-20210928152353067.png)
+
+```javascript
+//创建 promise 对象
+const p = new Promise((resolve, reject) => ){
+	resolve("success,zhe number is 1234");
+
+})
+
+// await 要放在 async 函数中
+async function main() {
+    let result = await p;
+    console.log(result);
+}
+
+
+//创建 promise 对象
+const p = new Promise((resolve, reject) => ){
+
+	reject("fail, please try again");
+})
+
+// await 要放在 async 函数中
+async function main() {
+    try{
+        let result = await p;
+        console.log(result);
+    }catch (e) {
+        console.log(e);
+    }   
+}
+```
+
+
+
+## 20.3 async 和 await 结合读取文件内容
+
+```javascript
+//1.引入 fs 模块
+const fs = require("fs");
+
+//读取文件1
+function readwenjian1() {
+    return new Promise((resolve, reject) => {
+		fs.readFile("./wenjian1.md", (err, data) => {
+            //如果失败
+            if (err) reject(err);
+            //如果成功
+            resolve(data);
+        })
+    })
+}
+
+//读取文件2
+function readwenjian2() {
+    return new Promise((resolve, reject) => {
+		fs.readFile("./wenjian2.md", (err, data) => {
+            //如果失败
+            if (err) reject(err);
+            //如果成功
+            resolve(data);
+        })
+    })
+}
+
+//声明一个 async 函数
+async function main(){
+    //获取文件内容
+    let data1 = await readwenjian1();
+    let data2 = await readwenjian2();
+}
+
+//调用
+main();
+```
+
+
+
+## 20.4 async 和  await 结合发送 AJAX 请求
+
+```javascript
+//发送 AJAX 请求， 返回的结果是 Promise 对象
+function sendAJAX(url) {
+    return new Promise((resolve, reject) => {
+        //1.创建对象
+        const x = new XMLHttpRequest();
+        
+        //2.初始化
+        x.open('GET', url);
+        
+        //3.发送
+        x.send();
+        
+        //4.事件绑定
+        x.onreadystatechange = function() {
+            if(x.readyState === 4) {
+                if(x.status >= 200 && x.status < 300) {
+                    //成功
+                    resolve(x.response);
+                }else{
+                    //如果失败
+                    reject(x.status);
+                }
+            }
+        }
+    })
+}
+
+//1.promise then 方法测试
+sendAJAX("http://api.apiopen.top/getJoke").then(value=>{
+    成功的回调
+},reason=>{
+    失败的回调
+})
+
+//2.async 与 await 测试
+async function main(){
+    //发送AJAX请求
+    let result = await sendAJAX("http://api.apiopen.top/getJoke");
+}
+
+
+main();
+```
+
+
+
+# 21.ES9 拓展运算符和 rest 参数
+
+```javascript
+function connect({host, port, ...user}) {
+    console.log(host);
+    console.log(port);
+    console.log(user);
+}
+
+connect({
+    host: '127.0.0.1',
+    port: 3306,
+    username: 'root',
+    password: 'root',
+    type:'master'
+})
+
+const skillOne = {
+    q: '天音波'
+}
+
+const skillTwo = {
+    w: '金钟罩'
+}
+
+const skillThree = {
+    e: '天雷破'
+}
+
+const skillFour = {
+    r: '猛龙摆尾'
+}
+
+const mangseng = {...skillOne, ...skillTwo, ...skillThree, ...skillFour};
+
+console.log(mangseng);
+```
+
+
+
+ # 22.ES9正则拓展-命名捕获分组
+
+```javascript
+//声明一个字符串
+let str = '<a href="http://www.atguigu.com">尚硅谷</a>;
+
+//提取 url 与 标签文本
+const reg = /<a href="(.*)">(.*)<\/a>/;
+
+//执行
+const result = reg.exec(str);
+
+console.log(result);
+```
+
+
+
+# 23.ES9正则拓展-正向、反向断言
+
+```javascript
+//声明字符串
+let str = 'JS1222222你知道吗555啦啦啦';
+
+//正向断言
+const reg = /\d+(?=啦)/;
+const result = reg.exec(str);
+
+//反向断言
+const reg = /(?<吗)\d+/;
+const result = reg.exec(str);
+console.log(result);
+```
+
+
+
+# 24.ES9正则扩展-dotALL模式
+
+# 25.ES10-ES11新特性
+
+
+
+![image-20210928194956290](../../Typora/img/image-20210928194956290.png)
 
